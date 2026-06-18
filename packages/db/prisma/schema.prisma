@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EventType {
+  EXAM
+  INTERVIEW
+  MEETINGS
+  INVITATION
+  ONLINE_ASSESSMENT
+  PERSONAL
+  PROJECT
+  CUSTOM
+  OTHER
+  HOLIDAYS
+  EVENTS
+}
+
+enum EventStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETED
+}
+
+enum ReminderSstatus {
+  PENDING
+  PROCESSING
+  SENT
+  RETRY
+  FAILED
+}
+
+enum NotificationStatus {
+  SENT
+  FAILED
+}
+
+enum DeviceType {
+  IOS
+  ANDROID
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  name          String
+  timezone      String         @default("UTC")
+  avatarUrl     String?
+  refreshToken  String?
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+
+  events        Event[]
+  reminders     Reminder[]
+  deviceTokens  DeviceToken[]
+  notifications NotificationLog[]
+
+  @@index([email])
+  @@map("users")
+}
