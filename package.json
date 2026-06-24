@@ -7,7 +7,10 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "db:generate": "prisma generate --config packages/db/prisma.config.ts"
+    "db:generate": "prisma generate --config packages/db/prisma.config.ts",
+    "db:validate": "prisma validate --config packages/db/prisma.config.ts",
+    "db:migrate:deploy": "prisma migrate deploy --config packages/db/prisma.config.ts",
+    "db:migrate:status": "prisma migrate status --config packages/db/prisma.config.ts"
   },
   "devDependencies": {
     "prettier": "^3.7.4",
