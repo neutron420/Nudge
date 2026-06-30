@@ -51,24 +51,24 @@ enum AuthProvider {
 }
 
 model User {
-  id              String         @id @default(uuid())
-  email           String         @unique
-  emailVerifiedAt DateTime?      @db.Timestamptz(3)
+  id              String    @id @default(uuid())
+  email           String    @unique
+  emailVerifiedAt DateTime? @db.Timestamptz(3)
   passwordHash    String?
   name            String
-  timezone        String         @default("UTC")
+  timezone        String    @default("UTC")
   avatarUrl       String?
-  isActive        Boolean        @default(true)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
 
-  authAccounts    AuthAccount[]
-  sessions        Session[]
-  events          Event[]
-  reminders       Reminder[]
-  deviceTokens    DeviceToken[]
-  notifications   NotificationLog[]
+  authAccounts  AuthAccount[]
+  sessions      Session[]
+  events        Event[]
+  reminders     Reminder[]
+  deviceTokens  DeviceToken[]
+  notifications NotificationLog[]
 
   @@map("users")
 }
@@ -123,8 +123,8 @@ model Event {
   updatedAt   DateTime    @updatedAt
   deletedAt   DateTime?
 
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reminders   Reminder[]
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders Reminder[]
 
   @@index([userId, startAt])
   @@index([userId, status])
@@ -132,48 +132,48 @@ model Event {
 }
 
 model Reminder {
-  id             String          @id @default(uuid())
-  eventId        String
-  userId         String
-  scheduledFor   DateTime        @db.Timestamptz(3)
-  offsetMinutes  Int
-  status         ReminderStatus  @default(PENDING)
-  retryCount     Int             @default(0)
-  maxRetries     Int             @default(5)
-  nextRetryAt    DateTime?       @db.Timestamptz(3)
-  sentAt         DateTime?       @db.Timestamptz(3)
-  lockedAt       DateTime?       @db.Timestamptz(3)
-  lockedBy       String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id            String         @id @default(uuid())
+  eventId       String
+  userId        String
+  scheduledFor  DateTime       @db.Timestamptz(3)
+  offsetMinutes Int
+  status        ReminderStatus @default(PENDING)
+  retryCount    Int            @default(0)
+  maxRetries    Int            @default(5)
+  nextRetryAt   DateTime?      @db.Timestamptz(3)
+  sentAt        DateTime?      @db.Timestamptz(3)
+  lockedAt      DateTime?      @db.Timestamptz(3)
+  lockedBy      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
-  event          Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  notifications  NotificationLog[]
+  event         Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications NotificationLog[]
 
+  @@unique([eventId, scheduledFor])
   @@index([status, scheduledFor])
   @@index([status, nextRetryAt])
   @@index([userId, status])
-  @@unique([eventId, scheduledFor])
   @@map("reminders")
 }
 
 model NotificationLog {
-  id             String              @id @default(uuid())
-  reminderId     String
-  userId         String
-  deviceTokenId  String?
-  fcmMessageId   String?
-  status         NotificationStatus
-  attemptNumber  Int
-  errorCode      String?
-  deliveredAt    DateTime?           @db.Timestamptz(3)
-  payload        Json
-  createdAt      DateTime            @default(now())
+  id            String             @id @default(uuid())
+  reminderId    String
+  userId        String
+  deviceTokenId String?
+  fcmMessageId  String?
+  status        NotificationStatus
+  attemptNumber Int
+  errorCode     String?
+  deliveredAt   DateTime?          @db.Timestamptz(3)
+  payload       Json
+  createdAt     DateTime           @default(now())
 
-  reminder       Reminder     @relation(fields: [reminderId], references: [id], onDelete: Cascade)
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  deviceToken    DeviceToken? @relation(fields: [deviceTokenId], references: [id], onDelete: SetNull)
+  reminder    Reminder     @relation(fields: [reminderId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceToken DeviceToken? @relation(fields: [deviceTokenId], references: [id], onDelete: SetNull)
 
   @@index([reminderId])
   @@index([deviceTokenId])
@@ -182,18 +182,18 @@ model NotificationLog {
 }
 
 model DeviceToken {
-  id          String      @id @default(uuid())
-  userId      String
-  fcmToken    String      @unique
-  deviceType  DeviceType
-  deviceName  String?
-  isActive    Boolean     @default(true)
-  lastSeenAt  DateTime    @default(now())
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id         String     @id @default(uuid())
+  userId     String
+  fcmToken   String     @unique
+  deviceType DeviceType
+  deviceName String?
+  isActive   Boolean    @default(true)
+  lastSeenAt DateTime   @default(now())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
-  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  notificationLogs  NotificationLog[]
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notificationLogs NotificationLog[]
 
   @@index([userId, isActive])
   @@map("device_tokens")

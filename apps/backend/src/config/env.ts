@@ -11,10 +11,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().default(3000),
-  DATABASE_URL: z.preprocess(
-    (val) => (val === "" || val === undefined ? "postgresql://postgres:postgres@localhost:5432/nudge_test" : val),
-    z.string().url()
-  ),
+  DATABASE_URL: z.string().url(),
   JWT_ACCESS_PRIVATE_KEY: z.string().optional(),
   JWT_ACCESS_PUBLIC_KEY: z.string().optional(),
   JWT_ISSUER: z.string().default("nudge"),

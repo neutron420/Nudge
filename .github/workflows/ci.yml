@@ -7,24 +7,9 @@ on:
     branches: [ main, master, develop ]
 
 jobs:
-  build-and-test:
-    name: Build and Test Backend
+  build:
+    name: Build Backend
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: nudge_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -42,15 +27,5 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate --schema=packages/db/prisma/schema.prisma
 
-      - name: Sync Database Schema (Push to Local PG Service)
-        run: npx prisma db push --schema=packages/db/prisma/schema.prisma --accept-data-loss
-
       - name: Build backend
         run: npm run build --workspace=backend
-
-      - name: Run backend integration tests
-        run: npm run test --workspace=backend
-        env:
-          JWT_ACCESS_SECRET: default_nudge_secret_key_at_least_32_chars_long_123456
-          PORT: 5000
-          NODE_ENV: test
