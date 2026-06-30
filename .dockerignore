@@ -1,0 +1,34 @@
+# Ignore Node modules
+node_modules
+**/node_modules
+
+# Ignore compiled builds
+dist
+**/dist
+build
+**/build
+
+# Ignore local environment variables and secrets
+.env
+.env.*
+*.env
+**/.env
+
+# Ignore git metadata and system files
+.git
+.github
+.gitignore
+.gitattributes
+.DS_Store
+Thumbs.db
+
+# Ignore IDE config and logs
+.gemini
+.agents
+.vscode
+.idea
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
